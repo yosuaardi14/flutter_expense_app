@@ -15,26 +15,25 @@ class ExpenseListController extends GetxController {
 
   List<Expense> get _weekExpenses {
     return listExpense.where((tx) {
-      String date = DateTime.now().toString();
-      String firstDay = '${date.substring(0, 8)}01${date.substring(10)}';
+      // String date = DateTime.now().toString();
+      // String firstDay = '${date.substring(0, 8)}01${date.substring(10)}';
 
-      int weekDay = DateTime.parse(firstDay).weekday;
+      // int weekDay = DateTime.parse(firstDay).weekday;
 
-      int selisih = (7 - weekDay) + 1;
+      // int selisih = (7 - weekDay) + 1;
 
-      DateTime todayDate = DateTime.now();
-
-      weekDay--;
-      int weekOfMonth = ((todayDate.day + weekDay) / 7).ceil();
-      int firstMondayWeek =
-          (weekOfMonth - 1) * (selisih + 1) + (weekOfMonth - 2);
-
-      return tx.date.isAfter(
-            DateTime.now().subtract(
-              Duration(days: todayDate.day - firstMondayWeek + 1),
-            ),
-          ) &&
-          tx.date.month == DateTime.now().month;
+      // weekDay--;
+      // int weekOfMonth = ((todayDate.day + weekDay) / 7).ceil();
+      // int firstMondayWeek =
+      //     (weekOfMonth - 1) * (selisih + 1) + (weekOfMonth - 2);
+      DateTime fullTodayDate = DateTime.now();
+      DateTime todayDate =
+          DateTime(fullTodayDate.year, fullTodayDate.month, fullTodayDate.day);
+      DateTime firstDayofWeek =
+          todayDate.subtract(Duration(days: todayDate.weekday - 1));
+      DateTime txDate = DateTime(tx.date.year, tx.date.month, tx.date.day);
+      int diff = txDate.difference(firstDayofWeek).inDays;
+      return (diff >= 0 && diff < 7) && (tx.date.month == DateTime.now().month);
     }).toList();
   }
 
